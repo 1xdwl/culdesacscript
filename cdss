@@ -1,26 +1,5 @@
 -- skid my shit and il fucking rape you
 
--- Check if hookfunction exists
-if not hookfunction then
-    warn("Your executor does not support hookfunction, bypass may not work.")
-else
-    -- loads the bypass
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixeluted/adoniscries/main/Source.lua"))()
-
-    -- Call the bypass function if available
-    if AdonisAntiCheatBypass then
-        local success, result = pcall(function()
-            AdonisAntiCheatBypass()
-        end)
-        if success then
-            -- Notify in game that the bypass was successful
-            notify("AntiCheat Bypass", "Anticheat successfully bypassed.")
-        else
-            warn("Failed to execute AdonisAntiCheatBypass: " .. tostring(result))
-        end
-    end
-end
-
 local function createMainGui()
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "MaxAccountGui"
@@ -372,3 +351,23 @@ end
 
 setupGui()
 
+-- Check if hookfunction exists
+if not hookfunction then
+    warn("Your executor does not support hookfunction, bypass may not work.")
+else
+    -- loads the bypass
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixeluted/adoniscries/main/Source.lua"))()
+
+    -- Call the bypass function if available
+    if AdonisAntiCheatBypass then
+        local success, result = pcall(function()
+            AdonisAntiCheatBypass()
+        end)
+        if success then
+            -- Notify in game that the bypass was successful
+            notify("AntiCheat Bypass", "Anticheat successfully bypassed.")
+        else
+            warn("Failed to execute AdonisAntiCheatBypass: " .. tostring(result))
+        end
+    end
+end
