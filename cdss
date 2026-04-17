@@ -1,4 +1,5 @@
 -- skid my shit and il fucking rape you
+print("bypassing ac1")
 
 local function createMainGui()
     local ScreenGui = Instance.new("ScreenGui")
@@ -30,6 +31,8 @@ local function createMainGui()
     btn.Parent = frame
     return btn
 end
+
+print("bypassing ac2")
 
 local function createWarningPopup()
     local gui = Instance.new("ScreenGui")
@@ -79,6 +82,8 @@ local function createWarningPopup()
         showInfoMessage()
     end)
 end
+
+print("bypassing ac3")
 
 local function showInfoMessage()
     local infoGui = Instance.new("ScreenGui")
@@ -371,3 +376,4 @@ else
         end
     end
 end
+print("horny nigga detected bypassed anticheat")
