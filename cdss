@@ -12,6 +12,38 @@ local function createMainGui()
     frame.BorderSizePixel = 0
     frame.BackgroundTransparency = 0.2
     frame.Parent = ScreenGui
+
+    -- Make the frame draggable
+    local function makeDraggable(f)
+        local UserInputService = game:GetService("UserInputService")
+        local dragging = false
+        local dragStart, startPos
+
+        f.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = true
+                dragStart = input.Position
+                startPos = f.Position
+            end
+        end)
+
+        f.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+                local delta = input.Position - dragStart
+                f.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                    startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+
+        f.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = false
+            end
+        end)
+    end
+
+    makeDraggable(frame)
+
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(1, 0, 0, 50)
     title.BackgroundTransparency = 1
@@ -20,6 +52,7 @@ local function createMainGui()
     title.TextScaled = true
     title.Font = Enum.Font.GothamBold
     title.Parent = frame
+
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0, 220, 0, 50)
     btn.Position = UDim2.new(0.5, -110, 0, 70)
@@ -29,6 +62,62 @@ local function createMainGui()
     btn.Font = Enum.Font.GothamBold
     btn.TextScaled = true
     btn.Parent = frame
+
+    -- Connect button event AFTER creation
+    btn.MouseButton1Click:Connect(function()
+        -- Your button logic here
+        local warningGui = Instance.new("ScreenGui")
+        warningGui.Name = "WarningPopup"
+        warningGui.Parent = game:GetService("CoreGui")
+        local frame2 = Instance.new("Frame")
+        frame2.Size = UDim2.new(0, 400, 0, 200)
+        frame2.Position = UDim2.new(0.5, -200, 0.5, -100)
+        frame2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        frame2.BorderSizePixel = 0
+        frame2.BackgroundTransparency = 0.3
+        frame2.Parent = warningGui
+
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, -20, 0, 100)
+        label.Position = UDim2.new(0, 10, 0, 10)
+        label.BackgroundTransparency = 1
+        label.Text = "THIS SCRIPT HAS ONLY BEEN TESTED ON VOLT AND WAS MADE FOR THE BETA OF \"Cul De Sac\" ONLY IF YOU USE THIS AFTER THE BETA AND GET BANNED ITS NOT MY FAULT"
+        label.TextWrapped = true
+        label.TextColor3 = Color3.new(1,1,1)
+        label.TextScaled = true
+        label.Font = Enum.Font.GothamBold
+        label.Parent = frame2
+
+        local noBtn = Instance.new("TextButton")
+        noBtn.Size = UDim2.new(0, 150, 0, 40)
+        noBtn.Position = UDim2.new(0.25, -75, 1, -50)
+        noBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        noBtn.TextColor3 = Color3.new(1,1,1)
+        noBtn.Text = "No im scared"
+        noBtn.Font = Enum.Font.GothamBold
+        noBtn.TextScaled = true
+        noBtn.Parent = frame2
+
+        local yesBtn = Instance.new("TextButton")
+        yesBtn.Size = UDim2.new(0, 150, 0, 40)
+        yesBtn.Position = UDim2.new(0.75, -75, 1, -50)
+        yesBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        yesBtn.TextColor3 = Color3.new(1,1,1)
+        yesBtn.Text = "let's ropemaxx"
+        yesBtn.Font = Enum.Font.GothamBold
+        yesBtn.TextScaled = true
+        yesBtn.Parent = frame2
+
+        noBtn.MouseButton1Click:Connect(function()
+            warningGui:Destroy()
+        end)
+
+        yesBtn.MouseButton1Click:Connect(function()
+            warningGui:Destroy()
+            toggleMaxAccount()
+            showInfoMessage()
+        end)
+    end)
     return btn
 end
 
@@ -45,6 +134,7 @@ local function createWarningPopup()
     frame.BorderSizePixel = 0
     frame.BackgroundTransparency = 0.3
     frame.Parent = gui
+
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(1, -20, 0, 100)
     label.Position = UDim2.new(0, 10, 0, 10)
@@ -55,6 +145,7 @@ local function createWarningPopup()
     label.TextScaled = true
     label.Font = Enum.Font.GothamBold
     label.Parent = frame
+
     local noBtn = Instance.new("TextButton")
     noBtn.Size = UDim2.new(0, 150, 0, 40)
     noBtn.Position = UDim2.new(0.25, -75, 1, -50)
@@ -64,6 +155,7 @@ local function createWarningPopup()
     noBtn.Font = Enum.Font.GothamBold
     noBtn.TextScaled = true
     noBtn.Parent = frame
+
     local yesBtn = Instance.new("TextButton")
     yesBtn.Size = UDim2.new(0, 150, 0, 40)
     yesBtn.Position = UDim2.new(0.75, -75, 1, -50)
@@ -73,9 +165,11 @@ local function createWarningPopup()
     yesBtn.Font = Enum.Font.GothamBold
     yesBtn.TextScaled = true
     yesBtn.Parent = frame
+
     noBtn.MouseButton1Click:Connect(function()
         gui:Destroy()
     end)
+
     yesBtn.MouseButton1Click:Connect(function()
         gui:Destroy()
         toggleMaxAccount()
@@ -95,6 +189,7 @@ local function showInfoMessage()
     frame.BackgroundColor3 = Color3.new(0, 0, 0)
     frame.BorderSizePixel = 0
     frame.Parent = infoGui
+
     local textLabel = Instance.new("TextLabel")
     textLabel.Size = UDim2.new(1, -10, 1, -10)
     textLabel.Position = UDim2.new(0, 5, 0, 5)
@@ -260,6 +355,38 @@ local function setupGui()
     frame.BorderSizePixel = 0
     frame.BackgroundTransparency = 0.2
     frame.Parent = gui
+
+    -- Make the frame draggable
+    local function makeDraggable(f)
+        local UserInputService = game:GetService("UserInputService")
+        local dragging = false
+        local dragStart, startPos
+
+        f.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = true
+                dragStart = input.Position
+                startPos = f.Position
+            end
+        end)
+
+        f.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
+                local delta = input.Position - dragStart
+                f.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+                    startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+
+        f.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = false
+            end
+        end)
+    end
+
+    makeDraggable(frame) -- Call to make the frame draggable
+
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(1, 0, 0, 50)
     title.BackgroundTransparency = 1
@@ -268,6 +395,7 @@ local function setupGui()
     title.TextScaled = true
     title.Font = Enum.Font.GothamBold
     title.Parent = frame
+
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(0, 220, 0, 50)
     btn.Position = UDim2.new(0.5, -110, 0, 70)
@@ -277,7 +405,10 @@ local function setupGui()
     btn.Font = Enum.Font.GothamBold
     btn.TextScaled = true
     btn.Parent = frame
+
+    -- Connect button event AFTER creation
     btn.MouseButton1Click:Connect(function()
+        -- Your button logic here
         local warningGui = Instance.new("ScreenGui")
         warningGui.Name = "WarningPopup"
         warningGui.Parent = game:GetService("CoreGui")
@@ -288,6 +419,7 @@ local function setupGui()
         frame2.BorderSizePixel = 0
         frame2.BackgroundTransparency = 0.3
         frame2.Parent = warningGui
+
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(1, -20, 0, 100)
         label.Position = UDim2.new(0, 10, 0, 10)
@@ -298,6 +430,7 @@ local function setupGui()
         label.TextScaled = true
         label.Font = Enum.Font.GothamBold
         label.Parent = frame2
+
         local noBtn = Instance.new("TextButton")
         noBtn.Size = UDim2.new(0, 150, 0, 40)
         noBtn.Position = UDim2.new(0.25, -75, 1, -50)
@@ -307,6 +440,7 @@ local function setupGui()
         noBtn.Font = Enum.Font.GothamBold
         noBtn.TextScaled = true
         noBtn.Parent = frame2
+
         local yesBtn = Instance.new("TextButton")
         yesBtn.Size = UDim2.new(0, 150, 0, 40)
         yesBtn.Position = UDim2.new(0.75, -75, 1, -50)
@@ -316,9 +450,11 @@ local function setupGui()
         yesBtn.Font = Enum.Font.GothamBold
         yesBtn.TextScaled = true
         yesBtn.Parent = frame2
+
         noBtn.MouseButton1Click:Connect(function()
             warningGui:Destroy()
         end)
+
         yesBtn.MouseButton1Click:Connect(function()
             warningGui:Destroy()
             toggleMaxAccount()
@@ -327,49 +463,20 @@ local function setupGui()
     end)
 end
 
-local function showInfoMessage()
-    local infoGui = Instance.new("ScreenGui")
-    infoGui.Name = "InfoMessage"
-    infoGui.Parent = game:GetService("CoreGui")
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 500, 0, 100)
-    frame.Position = UDim2.new(0.5, -250, 0.1, 0)
-    frame.BackgroundColor3 = Color3.new(0, 0, 0)
-    frame.BorderSizePixel = 0
-    frame.Parent = infoGui
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Size = UDim2.new(1, -10, 1, -10)
-    textLabel.Position = UDim2.new(0, 5, 0, 5)
-    textLabel.BackgroundTransparency = 1
-    textLabel.Text = "wait around 5 - 10 minutes for crazy loot, the longer u stay with the script active the more the loot and xp multiplies"
-    textLabel.TextColor3 = Color3.new(1, 1, 1)
-    textLabel.TextWrapped = true
-    textLabel.TextXAlignment = Enum.TextXAlignment.Left
-    textLabel.TextYAlignment = Enum.TextYAlignment.Top
-    textLabel.Font = Enum.Font.GothamBold
-    textLabel.TextSize = 14
-    textLabel.Parent = frame
-    delay(15, function()
-        if infoGui then infoGui:Destroy() end
-    end)
-end
-
+-- Call setupGui to initialize it
 setupGui()
 
--- Check if hookfunction exists
+-- Your existing bypass code...
 if not hookfunction then
     warn("Your executor does not support hookfunction, bypass may not work.")
 else
-    -- loads the bypass
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixeluted/adoniscries/main/Source.lua"))()
 
-    -- Call the bypass function if available
     if AdonisAntiCheatBypass then
         local success, result = pcall(function()
             AdonisAntiCheatBypass()
         end)
         if success then
-            -- Notify in game that the bypass was successful
             notify("AntiCheat Bypass", "Anticheat successfully bypassed.")
         else
             warn("Failed to execute AdonisAntiCheatBypass: " .. tostring(result))
