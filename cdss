@@ -1,0 +1,353 @@
+-- skid my shit and il fucking rape you
+
+local function createMainGui()
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "MaxAccountGui"
+    ScreenGui.Parent = game:GetService("CoreGui")
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 250, 0, 220)
+    frame.Position = UDim2.new(0.5, -125, 0.5, -110)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.BorderSizePixel = 0
+    frame.BackgroundTransparency = 0.2
+    frame.Parent = ScreenGui
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 50)
+    title.BackgroundTransparency = 1
+    title.Text = "Jewmaxxing V1"
+    title.TextColor3 = Color3.fromRGB(255,255,255)
+    title.TextScaled = true
+    title.Font = Enum.Font.GothamBold
+    title.Parent = frame
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 220, 0, 50)
+    btn.Position = UDim2.new(0.5, -110, 0, 70)
+    btn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.Text = "Max Account"
+    btn.Font = Enum.Font.GothamBold
+    btn.TextScaled = true
+    btn.Parent = frame
+    return btn
+end
+
+local function createWarningPopup()
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "WarningPopup"
+    gui.Parent = game:GetService("CoreGui")
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 400, 0, 200)
+    frame.Position = UDim2.new(0.5, -200, 0.5, -100)
+    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    frame.BorderSizePixel = 0
+    frame.BackgroundTransparency = 0.3
+    frame.Parent = gui
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -20, 0, 100)
+    label.Position = UDim2.new(0, 10, 0, 10)
+    label.BackgroundTransparency = 1
+    label.Text = "THIS SCRIPT HAS ONLY BEEN TESTED ON VOLT AND WAS MADE FOR THE BETA OF \"Cul De Sac\" ONLY IF YOU USE THIS AFTER THE BETA AND GET BANNED ITS NOT MY FAULT"
+    label.TextWrapped = true
+    label.TextColor3 = Color3.new(1,1,1)
+    label.TextScaled = true
+    label.Font = Enum.Font.GothamBold
+    label.Parent = frame
+    local noBtn = Instance.new("TextButton")
+    noBtn.Size = UDim2.new(0, 150, 0, 40)
+    noBtn.Position = UDim2.new(0.25, -75, 1, -50)
+    noBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    noBtn.TextColor3 = Color3.new(1,1,1)
+    noBtn.Text = "No im scared"
+    noBtn.Font = Enum.Font.GothamBold
+    noBtn.TextScaled = true
+    noBtn.Parent = frame
+    local yesBtn = Instance.new("TextButton")
+    yesBtn.Size = UDim2.new(0, 150, 0, 40)
+    yesBtn.Position = UDim2.new(0.75, -75, 1, -50)
+    yesBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+    yesBtn.TextColor3 = Color3.new(1,1,1)
+    yesBtn.Text = "let's ropemaxx"
+    yesBtn.Font = Enum.Font.GothamBold
+    yesBtn.TextScaled = true
+    yesBtn.Parent = frame
+    noBtn.MouseButton1Click:Connect(function()
+        gui:Destroy()
+    end)
+    yesBtn.MouseButton1Click:Connect(function()
+        gui:Destroy()
+        toggleMaxAccount()
+        showInfoMessage()
+    end)
+end
+
+local function showInfoMessage()
+    local infoGui = Instance.new("ScreenGui")
+    infoGui.Name = "InfoMessage"
+    infoGui.Parent = game:GetService("CoreGui")
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 500, 0, 100)
+    frame.Position = UDim2.new(0.5, -250, 0.1, 0)
+    frame.BackgroundColor3 = Color3.new(0, 0, 0)
+    frame.BorderSizePixel = 0
+    frame.Parent = infoGui
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, -10, 1, -10)
+    textLabel.Position = UDim2.new(0, 5, 0, 5)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = "wait around 5 - 10 minutes for crazy loot, the longer u stay with the script active the more the loot and xp multiplies"
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.TextWrapped = true
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left
+    textLabel.TextYAlignment = Enum.TextYAlignment.Top
+    textLabel.Font = Enum.Font.GothamBold
+    textLabel.TextSize = 14
+    textLabel.Parent = frame
+    delay(15, function()
+        if infoGui then infoGui:Destroy() end
+    end)
+end
+
+local remoteEvent = game:GetService("ReplicatedStorage"):WaitForChild("ClientToServer"):WaitForChild("DataEvents"):WaitForChild("EReplication")
+
+local function getModelsInFolder(folderName)
+    local models = {}
+    local folder = workspace:FindFirstChild(folderName)
+    if folder then
+        for _, obj in pairs(folder:GetChildren()) do
+            if obj:IsA("Model") then
+                table.insert(models, obj)
+            end
+        end
+    end
+    return models
+end
+
+local function maintainExactlySeven(folderName)
+    local folder = workspace:FindFirstChild(folderName)
+    if not folder then return end
+    local modelsByName = {}
+    for _, model in pairs(folder:GetChildren()) do
+        if model:IsA("Model") then
+            local name = model.Name
+            if not modelsByName[name] then
+                modelsByName[name] = {}
+            end
+            table.insert(modelsByName[name], model)
+        end
+    end
+    for name, models in pairs(modelsByName) do
+        while #models > 7 do
+            models[1]:Destroy()
+            table.remove(models, 1)
+        end
+    end
+end
+
+local function spawnEntitiesAndBugs()
+    local folderName = "EntityHandler"
+    local folder = workspace:FindFirstChild(folderName)
+    if not folder then return end
+    local currentModels = {}
+    for _, model in pairs(folder:GetChildren()) do
+        if model:IsA("Model") then
+            currentModels[model.Name] = currentModels[model.Name] or {}
+            table.insert(currentModels[model.Name], model)
+        end
+    end
+    for name, models in pairs(currentModels) do
+        local count = #models
+        local toSpawn = 7 - count
+        for i=1,toSpawn do
+            local sample = models[1]
+            local pos = nil
+            if sample then
+                if sample:FindFirstChild("PrimaryPart") then
+                    pos = sample.PrimaryPart.Position
+                else
+                    for _, p in pairs(sample:GetChildren()) do
+                        if p:IsA("BasePart") then
+                            pos = p.Position
+                            break
+                        end
+                    end
+                end
+            end
+            if pos and remoteEvent then
+                remoteEvent:FireServer("Batch", {{"Entity", name, pos, workspace.EntityHandler, "Ruins"}})
+                remoteEvent:FireServer("Batch", {{"Bug", name, pos, "Wilderness"}})
+            end
+        end
+    end
+    maintainExactlySeven("EntityHandler")
+end
+
+local function spawnFlowers()
+    local folderName = "Collectables"
+    local folder = workspace:FindFirstChild(folderName)
+    if not folder then return end
+    local currentModels = {}
+    for _, model in pairs(folder:GetChildren()) do
+        if model:IsA("Model") then
+            currentModels[model.Name] = currentModels[model.Name] or {}
+            table.insert(currentModels[model.Name], model)
+        end
+    end
+    for name, models in pairs(currentModels) do
+        local count = #models
+        local toSpawn = 7 - count
+        for i=1,toSpawn do
+            local sample = models[1]
+            local pos = nil
+            if sample then
+                if sample:FindFirstChild("PrimaryPart") then
+                    pos = sample.PrimaryPart.Position
+                else
+                    for _, p in pairs(sample:GetChildren()) do
+                        if p:IsA("BasePart") then
+                            pos = p.Position
+                            break
+                        end
+                    end
+                end
+            end
+            if pos and remoteEvent then
+                remoteEvent:FireServer("Batch", {{"Foragable", name, "Wilderness", "ForagableSpawn"}})
+            end
+        end
+    end
+    maintainExactlySeven("Collectables")
+end
+
+local function spawnLoop()
+    while true do
+        spawnEntitiesAndBugs()
+        spawnFlowers()
+        wait(1)
+    end
+end
+
+local firing = false
+local function toggleMaxAccount()
+    firing = not firing
+    if firing then
+        spawn(function() spawnLoop() end)
+        local p = game:GetService("Players").LocalPlayer
+        local c = p.Character or p.CharacterAdded:Wait()
+        local hrp = c:WaitForChild("HumanoidRootPart")
+        local platform = Instance.new("Part")
+        platform.Size = Vector3.new(50, 1, 50)
+        platform.Anchored = true
+        platform.Transparency = 1
+        platform.Position = Vector3.new(1e9, 1e9, 1e9)
+        platform.Parent = workspace
+        hrp.CFrame = CFrame.new(platform.Position + Vector3.new(0,2,0))
+    end
+end
+
+local function setupGui()
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "MaxAccountGui"
+    gui.Parent = game:GetService("CoreGui")
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 250, 0, 220)
+    frame.Position = UDim2.new(0.5, -125, 0.5, -110)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.BorderSizePixel = 0
+    frame.BackgroundTransparency = 0.2
+    frame.Parent = gui
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 50)
+    title.BackgroundTransparency = 1
+    title.Text = "Jewmaxxing V1"
+    title.TextColor3 = Color3.fromRGB(255,255,255)
+    title.TextScaled = true
+    title.Font = Enum.Font.GothamBold
+    title.Parent = frame
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 220, 0, 50)
+    btn.Position = UDim2.new(0.5, -110, 0, 70)
+    btn.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    btn.TextColor3 = Color3.new(1,1,1)
+    btn.Text = "Max Account"
+    btn.Font = Enum.Font.GothamBold
+    btn.TextScaled = true
+    btn.Parent = frame
+    btn.MouseButton1Click:Connect(function()
+        local warningGui = Instance.new("ScreenGui")
+        warningGui.Name = "WarningPopup"
+        warningGui.Parent = game:GetService("CoreGui")
+        local frame2 = Instance.new("Frame")
+        frame2.Size = UDim2.new(0, 400, 0, 200)
+        frame2.Position = UDim2.new(0.5, -200, 0.5, -100)
+        frame2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        frame2.BorderSizePixel = 0
+        frame2.BackgroundTransparency = 0.3
+        frame2.Parent = warningGui
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(1, -20, 0, 100)
+        label.Position = UDim2.new(0, 10, 0, 10)
+        label.BackgroundTransparency = 1
+        label.Text = "THIS SCRIPT HAS ONLY BEEN TESTED ON VOLT AND WAS MADE FOR THE BETA OF \"Cul De Sac\" ONLY IF YOU USE THIS AFTER THE BETA AND GET BANNED ITS NOT MY FAULT"
+        label.TextWrapped = true
+        label.TextColor3 = Color3.new(1,1,1)
+        label.TextScaled = true
+        label.Font = Enum.Font.GothamBold
+        label.Parent = frame2
+        local noBtn = Instance.new("TextButton")
+        noBtn.Size = UDim2.new(0, 150, 0, 40)
+        noBtn.Position = UDim2.new(0.25, -75, 1, -50)
+        noBtn.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        noBtn.TextColor3 = Color3.new(1,1,1)
+        noBtn.Text = "No im scared"
+        noBtn.Font = Enum.Font.GothamBold
+        noBtn.TextScaled = true
+        noBtn.Parent = frame2
+        local yesBtn = Instance.new("TextButton")
+        yesBtn.Size = UDim2.new(0, 150, 0, 40)
+        yesBtn.Position = UDim2.new(0.75, -75, 1, -50)
+        yesBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+        yesBtn.TextColor3 = Color3.new(1,1,1)
+        yesBtn.Text = "let's ropemaxx"
+        yesBtn.Font = Enum.Font.GothamBold
+        yesBtn.TextScaled = true
+        yesBtn.Parent = frame2
+        noBtn.MouseButton1Click:Connect(function()
+            warningGui:Destroy()
+        end)
+        yesBtn.MouseButton1Click:Connect(function()
+            warningGui:Destroy()
+            toggleMaxAccount()
+            showInfoMessage()
+        end)
+    end)
+end
+
+local function showInfoMessage()
+    local infoGui = Instance.new("ScreenGui")
+    infoGui.Name = "InfoMessage"
+    infoGui.Parent = game:GetService("CoreGui")
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 500, 0, 100)
+    frame.Position = UDim2.new(0.5, -250, 0.1, 0)
+    frame.BackgroundColor3 = Color3.new(0, 0, 0)
+    frame.BorderSizePixel = 0
+    frame.Parent = infoGui
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, -10, 1, -10)
+    textLabel.Position = UDim2.new(0, 5, 0, 5)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = "wait around 5 - 10 minutes for crazy loot, the longer u stay with the script active the more the loot and xp multiplies"
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.TextWrapped = true
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left
+    textLabel.TextYAlignment = Enum.TextYAlignment.Top
+    textLabel.Font = Enum.Font.GothamBold
+    textLabel.TextSize = 14
+    textLabel.Parent = frame
+    delay(15, function()
+        if infoGui then infoGui:Destroy() end
+    end)
+end
+
+setupGui()
+
